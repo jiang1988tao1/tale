@@ -32,6 +32,7 @@ import java.util.List;
 
 import static com.tale.bootstrap.TaleConst.CLASSPATH;
 import static com.tale.bootstrap.TaleConst.OPTION_SAFE_REMEMBER_ME;
+import static com.tale.utils.TaleUtils.UP_DIR;
 
 /**
  * Tale初始化进程
@@ -64,9 +65,6 @@ public class Bootstrap implements BladeLoader {
         }
         if(blade.environment().hasKey("db.dir")){
             dbdir=blade.environment().get("db.dir","");
-        }
-        if(blade.environment().hasKey("up.dir")){
-            updir = blade.environment().get("up.dir","");
         }
         SqliteJdbc.importSql(devMode,dbdir);
         Anima.open(SqliteJdbc.DB_SRC);
@@ -115,7 +113,7 @@ public class Bootstrap implements BladeLoader {
         if (StringKit.isNotBlank(ips)) {
             TaleConst.BLOCK_IPS.addAll(Arrays.asList(ips.split(",")));
         }
-        if (Files.exists(Paths.get(CLASSPATH + "install.lock"))) {
+        if (Files.exists(Paths.get(UP_DIR + "install.lock"))) {
             TaleConst.INSTALLED = Boolean.TRUE;
         }
 
@@ -123,6 +121,11 @@ public class Bootstrap implements BladeLoader {
         if (StringKit.isNotEmpty(rememberToken)) {
             RememberMe rememberMe = JsonKit.formJson(rememberToken, RememberMe.class);
             TaleConst.REMEMBER_TOKEN = rememberMe.getToken();
+        }
+
+        String isInstall = optionsService.getOption(TaleConst.OPTION_IS_INSTALL);
+        if("true".equals(isInstall)){
+            TaleConst.INSTALLED = Boolean.TRUE;
         }
 
         BaseController.THEME = "themes/" + Commons.site_option("site_theme");

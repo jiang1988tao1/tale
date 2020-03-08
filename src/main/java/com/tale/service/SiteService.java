@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static com.tale.bootstrap.TaleConst.CLASSPATH;
 import static com.tale.bootstrap.TaleConst.COMMENT_APPROVED;
+import static com.tale.utils.TaleUtils.UP_DIR;
 import static io.github.biezhi.anima.Anima.select;
 
 /**
@@ -37,6 +38,9 @@ public class SiteService {
 
     @Inject
     private CommentsService commentsService;
+
+    @Inject
+    private OptionsService optionsService;
 
     public MapCache mapCache = new MapCache();
 
@@ -53,9 +57,12 @@ public class SiteService {
         Integer uid = users.save().asInt();
 
         try {
-            String cp   = SiteService.class.getClassLoader().getResource("").getPath();
-            File   lock = new File(cp + "install.lock");
+//            String cp   = SiteService.class.getClassLoader().getResource("").getPath();
+            String cp = UP_DIR;
+            File   lock = new File(cp + "/install.lock");
             lock.createNewFile();
+            optionsService.saveOption(TaleConst.OPTION_IS_INSTALL,"true");
+
             TaleConst.INSTALLED = Boolean.TRUE;
             new Logs("初始化站点", null, "", uid).save();
         } catch (Exception e) {
