@@ -38,7 +38,7 @@ public final class SqliteJdbc {
     /**
      * 测试连接并导入数据库
      */
-    public static void importSql(boolean devMode) {
+    public static void importSql(boolean devMode,String dbdir) {
         try {
 
             DB_PATH = Const.CLASSPATH + File.separatorChar + DB_NAME;
@@ -46,6 +46,11 @@ public final class SqliteJdbc {
 
             if (devMode) {
                 DB_PATH = System.getProperty("user.dir") + "/" + DB_NAME;
+                DB_SRC = "jdbc:sqlite://" + DB_PATH;
+            }
+
+            if(dbdir!=null&&!dbdir.isEmpty()){
+                DB_PATH = dbdir + "/" + DB_NAME;
                 DB_SRC = "jdbc:sqlite://" + DB_PATH;
             }
 

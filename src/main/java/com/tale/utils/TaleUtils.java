@@ -364,7 +364,12 @@ public class TaleUtils {
         return '(' + sbuf.substring(1);
     }
 
-    public static final String UP_DIR = CLASSPATH.substring(0, CLASSPATH.length() - 1);
+//    public static final String UP_DIR = CLASSPATH.substring(0, CLASSPATH.length() - 1);
+
+    public static final String  UP_DIR = ConfFileReader.getPropertybyString(
+            "common", "up.dir");
+
+
 
     public static String getFileKey(String name) {
         String prefix = "/upload/" + DateKit.toString(new Date(), "yyyy/MM");

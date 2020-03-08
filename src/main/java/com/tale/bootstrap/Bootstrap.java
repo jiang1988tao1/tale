@@ -54,13 +54,21 @@ public class Bootstrap implements BladeLoader {
         Validators.useChinese();
 
         boolean devMode = true;
+        String dbdir = "";
+        String updir ="";
         if (blade.environment().hasKey("app.dev")) {
             devMode = blade.environment().getBoolean("app.dev", true);
         }
         if (blade.environment().hasKey("app.devMode")) {
             devMode = blade.environment().getBoolean("app.devMode", true);
         }
-        SqliteJdbc.importSql(devMode);
+        if(blade.environment().hasKey("db.dir")){
+            dbdir=blade.environment().get("db.dir","");
+        }
+        if(blade.environment().hasKey("up.dir")){
+            updir = blade.environment().get("up.dir","");
+        }
+        SqliteJdbc.importSql(devMode,dbdir);
         Anima.open(SqliteJdbc.DB_SRC);
         Commons.setSiteService(ioc.getBean(SiteService.class));
     }
