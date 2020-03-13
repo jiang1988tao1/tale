@@ -11,11 +11,14 @@
                     <a href="${site_url()}" class="info-logo">
                         <img src="/templates/themes/default/static/img/logo.png" alt="${site_title()}">
                     </a>
+<!--                    <div class="info-text">-->
+<!--                        <p>一生有所追求.</p>-->
+<!--                        <p>Powered by <a href="https://github.com/otale/tale" target="_blank" rel="nofollow">Tale</a>-->
+<!--                        </p>-->
+<!--                        <p>&copy; 2017 <a href="https://github.com/biezhi">biezhi</a></p>-->
+<!--                    </div>-->
                     <div class="info-text">
-                        <p>一生有所追求.</p>
-                        <p>Powered by <a href="https://github.com/otale/tale" target="_blank" rel="nofollow">Tale</a>
-                        </p>
-                        <p>&copy; 2017 <a href="https://github.com/biezhi">biezhi</a></p>
+                        <p id = "icp">{{ICP_license}}</p>
                     </div>
                 </div>
             </div>
@@ -184,6 +187,57 @@
         }
     });
     InstantClick.init('mousedown');
+</script>
+
+<script src="/static/admin/plugins/jquery/3.2.1/jquery.min.js"></script>
+<script src="/static/admin/plugins/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/static/admin/plugins/md5/md5.min.js"></script>
+<script src="/static/admin/plugins/dashborad/detect.js"></script>
+<script src="/static/admin/plugins/dashborad/fastclick.js"></script>
+<script src="/static/admin/plugins/dashborad/wow.min.js"></script>
+<script src="/static/admin/plugins/dashborad/jquery.slimscroll.js"></script>
+<script src="/static/admin/plugins/limonte-sweetalert2/6.4.1/sweetalert2.min.js"></script>
+<script src="/static/admin/plugins/axios/axios.min.js"></script>
+<script src="/static/admin/plugins/vue/vue.min.js"></script>
+<script src="/static/admin/plugins/moment/moment.min.js"></script>
+<script src="/static/admin/plugins/vue-loading/vue-loading.min.js"></script>
+<script src="/static/admin/plugins/dashborad/jquery.app.js?v=v1.0"></script>
+<script src="/static/admin/js/base.js?v=v1.0"></script>
+<script >
+    var tale = new $.tale();
+    var vm = new Vue({
+        el: '#icp',
+        data: {
+            ICP_license: ''
+        },
+        beforeCreate: function(){
+            vueLoding = this.$loading.show();
+        },
+        mounted: function () {
+            this.load();
+        },
+        methods: {
+            load: function () {
+                var $vm = this;
+                tale.get({
+                    url: '/public/api/icp',
+                    success: function (data) {
+                        $vm.ICP_license = data.payload;
+                        console.log($vm.ICP_license);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        alert(error || '数据加载失败');
+                    }
+                });
+            }
+        }
+    });
+
+    $(document).ready(function () {
+        vm.isLoading = false;
+        vueLoding.hide();
+    });
 </script>
 </body>
 </html>
